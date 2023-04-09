@@ -50,7 +50,7 @@ Create your Telegram Bot, save its token for later and add it to the group, supe
 
 **⚠️ Info:** _I can’t really recommend the add-some-channel-id-info-bot-way, because they didn’t work properly for me and were just broken or deprecated._
 
-Login to https://web.telegram.com and open up the wanted channel or group. The id is part of the website url which is a bit different for each of the different kinds of chat types (group, channel or super group). 
+Login to https://web.telegram.org and open up the wanted channel or group. The id is part of the website url which is a bit different for each of the different kinds of chat types (group, channel or super group). 
 
 **[For Channels →](https://gist.github.com/mraaroncruz/e76d19f7d61d59419002db54030ebe35)**
 
@@ -58,7 +58,7 @@ Login to https://web.telegram.com and open up the wanted channel or group. The i
 
 Same as for channels, but way simpler. The id (in the browser url) is the last part of the url and starts also with a dash. For example:
 
-Browser Url: `https://web.telegram.org/z/#-9693613342`  
+Browser Url: `https://web.telegram.org/k/#-9693613342`  
 Your Group Id would be: `-9693613342`
 
 **For Super Groups:**
@@ -67,22 +67,11 @@ The url-id-way won’t work as expected for «super group» chats. You will need
 
 1. Populate the `config.php` file with the chat id from the **simple groups** steps along with the other config options. 
 1. Then run `php index.php` and check the bad telegram api response info. You will then find the right chat id under `parameters`.
-1. Copy the supplied chat id from the error response into your config.php and try the second step again. 
-
-### 6. Create your config.php
-
-The `config.php` holds your telegram and minecraft server configs. Copy the file from the template and change the settings:
-
-```shell
-cp config.php.sample config.php
-
-# you can use for example nano to edit the file:
-nano config.php
-```
+1. Copy the supplied chat id from the error response into your config.php and try the second step again.
 
 The comments in the config will help you determine the right values.
 
-### 7. Create Crontab / Execute the script
+### 6. Create Crontab / Execute the script
 
 To let run the script periodically you can add a script to the `crontab`:
 

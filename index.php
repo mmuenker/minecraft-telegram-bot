@@ -18,12 +18,16 @@ $message_to_chat = "";
 // Compare live playerlist to cached playerlist. If there is a change, generate a message
 if ($live_playerlist != $cached_playerlist) {
   $message_to_chat = generate_message($live_playerlist, $cached_playerlist);
+} else {
+  echo "No change in playerlist. Not posting to chat.\n";
 }
 
 // If there's a message, post it
 if ($message_to_chat) {
   post_message_to_chat($message_to_chat);
   echo $message_to_chat; // also echo the result for easier debugging without chat spam
+} else {
+  echo "No message to post to chat.\n";
 }
 
 // When done, cache current playerlist
@@ -31,7 +35,7 @@ cache_playerlist($live_playerlist);
 
 // Display execution time. Useful for adjusting the interval to call this script
 $execution_time = microtime(true) - $start;
-echo "\r\nExecution time: " . $execution_time;
+echo "Execution time: " . $execution_time . "\n";
 
 function get_live_playerlist()
 {
@@ -41,6 +45,9 @@ function get_live_playerlist()
   try {
     $Query->Connect($config["server_url"], $config["server_port"]);
     $playerlist = $Query->GetPlayers();
+    if ($playerlist === false) {
+      $playerlist = [];
+    }
     sort($playerlist);
 
     return $playerlist;
@@ -51,12 +58,12 @@ function get_live_playerlist()
 
 function get_cached_playerlist()
 {
-  return unserialize(file_get_contents("cache"));
+  return unserialize(file_get_contents("/app/cache"));
 }
 
 function cache_playerlist($playerlist)
 {
-  file_put_contents("cache", serialize($playerlist));
+  file_put_contents("/app/cache", serialize($playerlist));
 }
 
 function generate_message($live_playerlist, $cached_playerlist)
@@ -111,7 +118,10 @@ function post_message_to_chat($message)
   $content = ["chat_id" => $config["chat_id"], "text" => $message];
   $result = $telegram->sendMessage($content);
 
-  if ($result["error_code"] >= 400) 
+  if ($result["ok"] == true)
+  {
+    echo "Message sent successfully.";
+  } else if ($result["error_code"] >= 400)
   {
     echo "Failed to send telegram message (" . $result["error_code"] . ").";
     echo "Message: " . $result["description"];
